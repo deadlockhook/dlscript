@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 
+#define op_end ";"
 #define op_add "+"
 #define op_sub "-"
 #define op_mul "*"
@@ -28,6 +29,7 @@
 #define bitop_shr ">>"
 
 enum op_type : uint8_t {
+	op_type_end,
 	op_type_add,
 	op_type_sub,
 	op_type_mul,
@@ -54,6 +56,9 @@ enum op_type : uint8_t {
 	op_type_unknown
 };
 
+std::string op_type_to_string(op_type op);
+
+bool is_end_operation(const std::string& op);
 op_type is_math_operation(const std::string& op);
 op_type is_bit_operation_type(const std::string& op);
 op_type is_operation(const std::string& op);

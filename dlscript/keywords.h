@@ -19,3 +19,5 @@ enum keyword_type : uint8_t
 	keyword_type_unknown
 };
 
+
+keyword_type is_keyword(const std::string& kw);

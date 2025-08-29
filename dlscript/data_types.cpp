@@ -1,6 +1,41 @@
 #include "data_types.h"
 #include "helper_functions.h"
 
+var_type is_datatype(const std::string& type_str)
+{
+    if (type_str == type_int64) return var_type_int64;
+    if (type_str == type_int32) return var_type_int32;
+    if (type_str == type_int16) return var_type_int16;
+    if (type_str == type_int8) return var_type_int8;
+    if (type_str == type_uint64) return var_type_uint64;
+    if (type_str == type_uint32) return var_type_uint32;
+    if (type_str == type_uint16) return var_type_uint16;
+    if (type_str == type_uint8) return var_type_uint8;
+    if (type_str == type_float64) return var_type_float64;
+    if (type_str == type_string) return var_type_string;
+    if (type_str == type_void) return var_type_void;
+    return var_type_unknown;
+}
+
+std::string type_to_string(var_type type)
+{
+    switch (type)
+    {
+    case var_type_int64: return type_int64;
+    case var_type_int32: return type_int32;
+    case var_type_int16: return type_int16;
+    case var_type_int8:  return type_int8;
+    case var_type_uint64: return type_uint64;
+    case var_type_uint32: return type_uint32;
+    case var_type_uint16: return type_uint16;
+    case var_type_uint8:  return type_uint8;
+    case var_type_float64: return type_float64;
+    case var_type_string: return type_string;
+    case var_type_void: return type_void;
+    default: return "unknown";
+    }
+}
+
 bool is_const_integer_value(const std::string& tok, int64_t& value)
 {
     value = 0;

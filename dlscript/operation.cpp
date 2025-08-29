@@ -1,5 +1,42 @@
 #include "operation.h"
 
+std::string op_type_to_string(op_type op)
+{
+	switch (op)
+	{
+	case op_type_end: return op_end;
+	case op_type_add: return op_add;
+	case op_type_sub: return op_sub;
+	case op_type_mul: return op_mul;
+	case op_type_div: return op_div;
+	case op_type_mod: return op_mod;
+	case op_type_assign: return op_assign;
+	case op_type_eq: return op_eq;
+	case op_type_neq: return op_neq;
+	case op_type_gt: return op_gt;
+	case op_type_gte: return op_gte;
+	case op_type_lt: return op_lt;
+	case op_type_lte: return op_lte;
+	case op_type_and: return op_and;
+	case op_type_or: return op_or;
+	case op_type_not: return op_not;
+	case op_type_inc: return op_inc;
+	case op_type_dec: return op_dec;
+	case op_type_bit_and: return bitop_and;
+	case op_type_bit_or: return bitop_or;
+	case op_type_bit_xor: return bitop_xor;
+	case op_type_bit_not: return bitop_not;
+	case op_type_bit_shl: return bitop_shl;
+	case op_type_bit_shr: return bitop_shr;
+	default: return "unknown";
+	}
+}
+
+bool is_end_operation(const std::string& op)
+{
+	return (op == op_end);
+}
+
 op_type is_math_operation(const std::string& op) {
 	if (op == op_add) return op_type_add;
 	if (op == op_sub) return op_type_sub;
@@ -42,6 +79,9 @@ op_type is_operation(const std::string& op) {
 
 	if (bit_op != op_type_unknown)
 		return bit_op;
+
+	if (is_end_operation(op))
+		return op_type_end;
 
 	return op_type_unknown;
 }
