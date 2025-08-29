@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
 #include <string>
+#include "data_types.h"
+#include <vector>
 
 #define op_end ";"
 #define op_add "+"
@@ -54,6 +56,22 @@ enum op_type : uint8_t {
 	op_type_bit_shl,
 	op_type_bit_shr,
 	op_type_unknown
+};
+
+struct numeric_operation_data_t
+{
+	op_type type;
+	union {
+		int64_t int64_value;
+		double float64_value;
+	};
+	var_type value_type;
+};
+
+struct numeric_operation_t
+{
+	op_type type;
+	std::vector<numeric_operation_data_t*> operands;
 };
 
 std::string op_type_to_string(op_type op);

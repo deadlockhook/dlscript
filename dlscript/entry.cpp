@@ -13,6 +13,7 @@
 #include <iomanip> 
 #include "helper_functions.h"
 #include "types.h"
+#include "compile_time_calculations.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -215,55 +216,8 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 				return false;
 			}
 
-			/*for now i will support only assignment of one value, later i will support calculations*/
-			/*we will also optimize by calculating these values before hand*/
-
-			if (first_token_info.const_type == var_type_int64 || first_token_info.const_type == var_type_int32
-				|| first_token_info.const_type == var_type_int16
-				|| first_token_info.const_type == var_type_int8
-				|| first_token_info.const_type == var_type_uint64
-				|| first_token_info.const_type == var_type_uint32
-				|| first_token_info.const_type == var_type_uint16
-				|| first_token_info.const_type == var_type_uint8)
-			{
-				auto& value_word = ws[3];
-		
-				if (!is_const_integer_value(value_word.text, int64_value))
-				{
-					std::cout << "Expected integer constant after '=', got: " << value_word.text << "\n";
-					return false;
-				}
-
-				assigned_type = var_type_int64;
-			}
-			else if (first_token_info.const_type == var_type_float64)
-			{
-				auto& value_word = ws[3];
-			
-				if (!is_const_floating_value(value_word.text, floating_value))
-				{
-					std::cout << "Expected floating point constant after '=', got: " << value_word.text << "\n";
-					return false;
-				}
-
-				assigned_type = var_type_float64;
-			}
-			else if (first_token_info.const_type == var_type_string)
-			{
-
-				auto& value_word = ws[3];
-
-				if (!is_const_string_value(value_word.text, string_value))
-				{
-					std::cout << "Expected string constant after '=', got: " << value_word.text << "\n";
-					return false;
-				}
-
-				assigned_type = var_type_string;
-			}
-			else
-			{
-				std::cout << "Unsupported variable type for assignment\n";
+			if (!calculate_compile_time_expression(&ws[3], (int)(w_count - 3), first_token_info.const_type, int64_value, floating_value, string_value)) {
+				std::cout << "Failed to calculate compile time expression\n";
 				return false;
 			}
 		}
@@ -281,39 +235,6 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			ctx.compiled_data.globals[v.name] = v;
 			break;
 		}
-		case var_type_int32:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_int32;
-			v.data = new __int32(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(__int32) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
-		case var_type_int16:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_int16;
-			v.data = new __int16(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(__int16) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
-		case var_type_int8:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_int8;
-			v.data = new __int8(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(__int8) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
 		case var_type_uint64:
 		{
 			var_t v;
@@ -322,39 +243,6 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			v.data = new unsigned __int64(0);
 			v.refcount = 1;
 			ctx.allocations[v.data] = mem_t{ v.data, sizeof(unsigned __int64) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
-		case var_type_uint32:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_uint32;
-			v.data = new unsigned __int32(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(unsigned __int32) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
-		case var_type_uint16:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_uint16;
-			v.data = new unsigned __int16(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(unsigned __int16) };
-			ctx.compiled_data.globals[v.name] = v;
-			break;
-		}
-		case var_type_uint8:
-		{
-			var_t v;
-			v.name = next_word.text;
-			v.type = var_type_uint8;
-			v.data = new unsigned __int8(0);
-			v.refcount = 1;
-			ctx.allocations[v.data] = mem_t{ v.data, sizeof(unsigned __int8) };
 			ctx.compiled_data.globals[v.name] = v;
 			break;
 		}
@@ -418,7 +306,7 @@ bool parse_script(const std::string& script, script_context_t& ctx) {
 int main() {
 	
 	std::string example_script = R"(
-		__int64 global_var = 0;
+		__int64 global_var = 34a;
 		)";
 
 	script_context_t ctx;

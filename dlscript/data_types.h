@@ -3,13 +3,7 @@
 #include <string>
 
 #define type_int64 "__int64"
-#define type_int32 "__int32"
-#define type_int16 "__int16"
-#define type_int8  "__int8"
 #define type_uint64 "unsigned __int64"
-#define type_uint32 "unsigned __int32"
-#define type_uint16 "unsigned __int16"
-#define type_uint8  "unsigned __int8"
 #define type_float64 "double"
 #define type_string "string"
 #define type_void "void"
@@ -17,13 +11,7 @@
 enum var_type : uint8_t
 {
 	var_type_int64,
-	var_type_int32,
-	var_type_int16,
-	var_type_int8,
 	var_type_uint64,
-	var_type_uint32,
-	var_type_uint16,
-	var_type_uint8,
 	var_type_float64,
 	var_type_string,
 	var_type_void,

@@ -30,6 +30,9 @@
     <ClCompile Include="keywords.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="compile_time_calculations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper_functions.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="keywords.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="compile_time_calculations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
