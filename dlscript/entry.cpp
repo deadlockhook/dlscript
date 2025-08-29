@@ -88,8 +88,6 @@ bool is_comment(const std::string& token) {
 	return (token == long_comment_start || token == long_comment_end || token == short_comment);
 }
 
-
-
 bool is_const_value(const std::string& token)
 {
 	return is_const_floating_value(token)
@@ -310,7 +308,7 @@ bool parse_script(const std::string& script, script_context_t& ctx) {
 int main() {
 	
 	std::string example_script = R"(
-		double global_var = 0.564746912123343;
+		double global_var = 12.12;
 		)";
 
 	script_context_t ctx;
