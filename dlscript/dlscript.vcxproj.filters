@@ -30,7 +30,7 @@
     <ClCompile Include="keywords.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="compile_time_calculations.cpp">
+    <ClCompile Include="compile_time_eval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,10 @@
     <ClInclude Include="keywords.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="compile_time_calculations.h">
+    <ClInclude Include="compile_time_eval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tokenizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -48,9 +48,24 @@ struct string_constant_t
 	std::string value;
 };
 
+struct const_val {
+	var_type ty = var_type_unknown;
+	long long i = 0;
+	double    f = 0.0;
+	std::string s;
+};
+
 bool is_const_integer_value(const std::string& tok, int64_t& value);
 bool is_const_floating_value(const std::string& tok, double& value);
 bool is_const_string_value(const std::string& tok, std::string& value);
+
+static bool cv_from_token(const std::string& tok, const_val& out) {
+	long long iv = 0; double dv = 0.0; std::string sv;
+	if (is_const_string_value(tok, sv)) { out.ty = var_type_string; out.s = (sv); return true; }
+	if (is_const_integer_value(tok, iv)) { out.ty = var_type_int64; out.i = iv; out.f = (double)iv; return true; }
+	if (is_const_floating_value(tok, dv)) { out.ty = var_type_float64; out.f = dv; out.i = (long long)dv; return true; }
+	return false;
+}
 
 static inline  bool is_const_integer_value(const std::string& s) { int64_t v; return is_const_integer_value(s, v); }
 static inline  bool is_const_floating_value(const std::string& s) { double v; return is_const_floating_value(s, v); }

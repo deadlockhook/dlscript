@@ -125,7 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="compile_time_calculations.cpp" />
+    <ClCompile Include="compile_time_eval.cpp" />
     <ClCompile Include="data_types.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="keywords.cpp" />
@@ -133,11 +133,12 @@
     <ClCompile Include="types.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="compile_time_calculations.h" />
+    <ClInclude Include="compile_time_eval.h" />
     <ClInclude Include="data_types.h" />
     <ClInclude Include="helper_functions.h" />
     <ClInclude Include="keywords.h" />
     <ClInclude Include="operation.h" />
+    <ClInclude Include="tokenizer.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

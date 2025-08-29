@@ -30,6 +30,23 @@
 #define bitop_shl "<<"
 #define bitop_shr ">>"
 
+
+static inline bool is_paren(const std::string& t) { return t == "(" || t == ")"; }
+static inline bool is_unary_candidate(const std::string& t) { return t == "+" || t == "-" || t == "~"; }
+static inline bool is_binary_op(const std::string& t) {
+	return t == "+" || t == "-" || t == "*" || t == "/" || t == "%" ||
+		t == "<<" || t == ">>" || t == "&" || t == "^" || t == "|";
+}
+
+static inline int precedence(const std::string& t) {
+	if (t == "*" || t == "/" || t == "%") return 5;
+	if (t == "+" || t == "-")         return 4;
+	if (t == "<<" || t == ">>")       return 3;
+	if (t == "&")                 return 2;
+	if (t == "^")                 return 1;
+	if (t == "|")                 return 0;
+	return -1;
+}
 enum op_type : uint8_t {
 	op_type_end,
 	op_type_add,

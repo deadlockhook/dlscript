@@ -13,7 +13,7 @@
 #include <iomanip> 
 #include "helper_functions.h"
 #include "types.h"
-#include "compile_time_calculations.h"
+#include "compile_time_eval.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -100,7 +100,8 @@ bool is_const_value(const std::string& token)
 bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function_context)
 {
 	/*find next non whitespace*/
-	auto ws = words_ws(line);
+	bool in_block_comment = false;
+	auto ws = tokenize_line_ops(line, in_block_comment);
 	size_t w_count = ws.size();
 	if (!w_count)
 	{
@@ -220,6 +221,8 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 				std::cout << "Failed to calculate compile time expression\n";
 				return false;
 			}
+
+			std::cout << "calculated int " << int64_value << " float " << floating_value << " string " << string_value << "\n";
 		}
 
 		switch (first_token_info.const_type)
@@ -306,7 +309,7 @@ bool parse_script(const std::string& script, script_context_t& ctx) {
 int main() {
 	
 	std::string example_script = R"(
-		__int64 global_var = 34a;
+		string global_var = "34a"+" test" + (32 + 45);
 		)";
 
 	script_context_t ctx;

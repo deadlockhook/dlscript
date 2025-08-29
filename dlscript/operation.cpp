@@ -70,6 +70,9 @@ op_type is_bit_operation_type(const std::string& op) {
 
 op_type is_operation(const std::string& op) {
 
+	if (is_end_operation(op))
+		return op_type_end;
+
 	op_type math_op = is_math_operation(op);
 
 	if (math_op != op_type_unknown)
@@ -80,8 +83,6 @@ op_type is_operation(const std::string& op) {
 	if (bit_op != op_type_unknown)
 		return bit_op;
 
-	if (is_end_operation(op))
-		return op_type_end;
 
 	return op_type_unknown;
 }
