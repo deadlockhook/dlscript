@@ -135,9 +135,11 @@ bool eval_rpn_const(const std::vector<rpn_item>& rpn, const_val& out, std::strin
             else if (op == "-") r.f = af - bf;
             else if (op == "*") r.f = af * bf;
             else if (op == "/") r.f = af / bf;
-            else { err = "op not supported for floats: " + op; return false; }
+            else { err = "op not supported for floats: " + op;
+            return false; }
             st.push_back((r));
         }
+
         else {
             long long ai = a.i, bi = b.i;
             const_val r; r.ty = var_type_int64;
@@ -146,8 +148,15 @@ bool eval_rpn_const(const std::vector<rpn_item>& rpn, const_val& out, std::strin
             else if (op == "*") r.i = ai * bi;
             else if (op == "/") { if (bi == 0) { err = "division by zero"; return false; } r.i = ai / bi; }
             else if (op == "%") { if (bi == 0) { err = "mod by zero"; return false; } r.i = ai % bi; }
-            else if (op == "<<") r.i = ai << bi;
-            else if (op == ">>") r.i = ai >> bi;
+            else if (op == "<<") {
+                if (bi < 0 || bi >= 64) { err = "shift count out of range"; return false; }
+                r.i = static_cast<long long>(
+                    (static_cast<unsigned long long>(ai)) << static_cast<unsigned>(bi));
+            }
+            else if (op == ">>") {
+                if (bi < 0 || bi >= 64) { err = "shift count out of range"; return false; }
+                r.i = ai >> bi;
+            }
             else if (op == "&")  r.i = ai & bi;
             else if (op == "^")  r.i = ai ^ bi;
             else if (op == "|")  r.i = ai | bi;

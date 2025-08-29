@@ -221,7 +221,8 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 				std::cout << "Failed to calculate compile time expression\n";
 				return false;
 			}
-
+			std::cout << std::setprecision(100)
+				<< floating_value << "\n";
 			std::cout << "calculated int " << int64_value << " float " << floating_value << " string " << string_value << "\n";
 		}
 
@@ -309,7 +310,7 @@ bool parse_script(const std::string& script, script_context_t& ctx) {
 int main() {
 	
 	std::string example_script = R"(
-		string global_var = "34a"+" test" + (32 + 45);
+		double global_var = 0.564746912123343;
 		)";
 
 	script_context_t ctx;
