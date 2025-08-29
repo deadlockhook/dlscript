@@ -217,11 +217,16 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 
 			if (!calculate_compile_time_expression(&ws[3], (int)(w_count - 3), first_token_info.const_type, int64_value, floating_value, string_value)) {
 				std::cout << "Failed to calculate compile time expression\n";
-				return false;
+				has_assignment = false;
 			}
-			std::cout << std::setprecision(100)
-				<< floating_value << "\n";
-			std::cout << "calculated int " << int64_value << " float " << floating_value << " string " << string_value << "\n";
+		}
+
+		if (!has_assignment && w_count > 3)
+		{
+			/*we cant compile time optimize this for now because it involves a dynamic call to a function*/
+			/*we need to parse all the constants here to the vm, we can also optimize these constants here*/
+			std::cout << "Unexpected tokens after variable declaration\n";
+			return false;
 		}
 
 		switch (first_token_info.const_type)
@@ -232,6 +237,10 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			v.name = next_word.text;
 			v.type = var_type_int64;
 			v.data = new __int64(0);
+			
+			if (has_assignment)
+				*(__int64*)v.data = int64_value;
+
 			v.refcount = 1;
 			ctx.allocations[v.data] = mem_t{ v.data, sizeof(__int64) };
 			ctx.compiled_data.globals[v.name] = v;
@@ -243,6 +252,10 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			v.name = next_word.text;
 			v.type = var_type_uint64;
 			v.data = new unsigned __int64(0);
+
+			if (has_assignment)
+				*(unsigned __int64*)v.data = (unsigned __int64)int64_value;
+
 			v.refcount = 1;
 			ctx.allocations[v.data] = mem_t{ v.data, sizeof(unsigned __int64) };
 			ctx.compiled_data.globals[v.name] = v;
@@ -254,6 +267,10 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			v.name = next_word.text;
 			v.type = var_type_float64;
 			v.data = new double(0.0);
+
+			if (has_assignment)
+				*(double*)v.data = floating_value;
+
 			v.refcount = 1;
 			ctx.allocations[v.data] = mem_t{ v.data, sizeof(double) };
 			ctx.compiled_data.globals[v.name] = v;
@@ -265,6 +282,10 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			v.name = next_word.text;
 			v.type = var_type_string;
 			v.data = new std::string("");
+			
+			if (has_assignment)
+				*(std::string*)v.data = string_value;
+
 			v.refcount = 1;
 			ctx.allocations[v.data] = mem_t{ v.data, sizeof(std::string) };
 			ctx.compiled_data.globals[v.name] = v;
@@ -308,7 +329,7 @@ bool parse_script(const std::string& script, script_context_t& ctx) {
 int main() {
 	
 	std::string example_script = R"(
-		double global_var = 12.12;
+		double global_var = 12.12 + 12.3 + fun();
 		)";
 
 	script_context_t ctx;
