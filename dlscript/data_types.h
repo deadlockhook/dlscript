@@ -1,0 +1,84 @@
+#pragma once
+#include <Windows.h>
+#include <string>
+
+#define type_int64 "__int64"
+#define type_int32 "__int32"
+#define type_int16 "__int16"
+#define type_int8  "__int8"
+#define type_uint64 "unsigned __int64"
+#define type_uint32 "unsigned __int32"
+#define type_uint16 "unsigned __int16"
+#define type_uint8  "unsigned __int8"
+#define type_float64 "double"
+#define type_string "string"
+#define type_void "void"
+
+enum var_type : uint8_t
+{
+	var_type_int64,
+	var_type_int32,
+	var_type_int16,
+	var_type_int8,
+	var_type_uint64,
+	var_type_uint32,
+	var_type_uint16,
+	var_type_uint8,
+	var_type_float64,
+	var_type_string,
+	var_type_void,
+	var_type_unknown
+};
+
+var_type is_datatype(const std::string& type_str)
+{
+	if (type_str == type_int64) return var_type_int64;
+	if (type_str == type_int32) return var_type_int32;
+	if (type_str == type_int16) return var_type_int16;
+	if (type_str == type_int8) return var_type_int8;
+	if (type_str == type_uint64) return var_type_uint64;
+	if (type_str == type_uint32) return var_type_uint32;
+	if (type_str == type_uint16) return var_type_uint16;
+	if (type_str == type_uint8) return var_type_uint8;
+	if (type_str == type_float64) return var_type_float64;
+	if (type_str == type_string) return var_type_string;
+	if (type_str == type_void) return var_type_void;
+	return var_type_unknown;
+}
+
+struct var_t
+{
+	std::string name;
+	int type;
+	void* data;
+	int refcount;
+};
+
+struct constant_t
+{
+	var_type type;
+	union {
+		__int64 int64_value;
+		__int32 int32_value;
+		__int16 int16_value;
+		__int8 int8_value;
+		double float64_value;
+	};
+
+	constant_t() : type(var_type_unknown), int64_value(0) {}
+};
+
+struct string_constant_t
+{
+	std::string value;
+};
+
+bool is_const_integer_value(const std::string& tok, int64_t& value);
+bool is_const_floating_value(const std::string& tok, double& value);
+bool is_const_string_value(const std::string& tok, std::string& value);
+
+static inline  bool is_const_integer_value(const std::string& s) { int64_t v; return is_const_integer_value(s, v); }
+static inline  bool is_const_floating_value(const std::string& s) { double v; return is_const_floating_value(s, v); }
+static inline  bool is_const_string_value(const std::string& s) { std::string v; return is_const_string_value(s, v); }
+
+
