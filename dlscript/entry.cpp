@@ -226,6 +226,7 @@ bool parse_line(const std::string& line, script_context_t& ctx,bool& in_function
 			/*we cant compile time optimize this for now because it involves a dynamic call to a function*/
 			/*we need to parse all the constants here to the vm, we can also optimize these constants here*/
 
+			/*calculate constants variables and create instruction table for the vm to execute*/
 			
 
 			std::cout << "Unexpected tokens after variable declaration\n";
